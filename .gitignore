@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+cowrie-env/
+
+# Cowrie generated files
+cowrie/var/log/
+cowrie/var/lib/
+cowrie/var/run/
+
+# OS files
+.DS_Store
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Cowrie source repository
+cowrie/

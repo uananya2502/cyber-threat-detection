@@ -22,3 +22,4 @@ cowrie/var/run/
 
 # Cowrie source repository
 cowrie/
+data/threat_intel/threatfox_raw.json

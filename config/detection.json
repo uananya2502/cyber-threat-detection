@@ -1,0 +1,20 @@
+{
+  "ioc_csv": "data/threat_intel/threatfox_normalized.csv",
+  "correlation_window_seconds": 300,
+  "correlation_min_events": 3,
+  "kafka": {
+    "enabled": false,
+    "bootstrap_servers": "localhost:9092",
+    "topic": "cowrie-events"
+  },
+  "rules": [
+    {"id": "SYSTEM_RECON", "severity": "low", "description": "System information discovery", "pattern": "^uname(?:\\s+-\\w+)*$"},
+    {"id": "USER_RECON", "severity": "low", "description": "Current user discovery", "pattern": "^whoami$"},
+    {"id": "DIRECTORY_RECON", "severity": "low", "description": "Working directory discovery", "pattern": "^pwd$"},
+    {"id": "FILE_RECON", "severity": "low", "description": "File or directory enumeration", "pattern": "^ls(?:\\s|$)"},
+    {"id": "ACCOUNT_ENUMERATION", "severity": "medium", "description": "Account database access", "pattern": "\\b(?:cat|less|head|grep)\\b[^\\n]*/etc/(?:passwd|shadow)\\b"},
+    {"id": "DOWNLOAD_ACTIVITY", "severity": "medium", "description": "Possible file download", "pattern": "(?:^|[;&|]\\s*|\\s)(?:wget|curl)\\b"},
+    {"id": "NETWORK_RECON", "severity": "low", "description": "Network configuration discovery", "pattern": "(?:^|\\s)(?:ifconfig|ip\\s+(?:addr|a))\\b"},
+    {"id": "PRIVILEGE_ATTEMPT", "severity": "high", "description": "Privilege escalation command", "pattern": "(?:^|[;&|]\\s*|\\s)(?:sudo|su\\s+-|chmod\\s+[47])\\b"}
+  ]
+}

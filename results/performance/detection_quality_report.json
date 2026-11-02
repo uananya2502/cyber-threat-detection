@@ -1,0 +1,149 @@
+{
+  "title": "Synthetic Static Command Rule Evaluation",
+  "dataset": {
+    "positive_cases": 12,
+    "benign_cases": 10,
+    "total_cases": 22,
+    "static_rules_evaluated": 12
+  },
+  "overall": {
+    "TP": 13,
+    "FP": 0,
+    "TN": 251,
+    "FN": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "accuracy": 1.0
+  },
+  "per_rule": {
+    "SYSTEM_RECON": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "USER_RECON": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "DIRECTORY_RECON": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "FILE_RECON": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "ACCOUNT_ENUMERATION": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "DOWNLOAD_ACTIVITY": {
+      "TP": 2,
+      "FP": 0,
+      "TN": 20,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "NETWORK_RECON": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "PRIVILEGE_ATTEMPT": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "CREDENTIAL_ACCESS": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "PERSISTENCE_ATTEMPT": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "DESTRUCTIVE_COMMAND": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    },
+    "SHELL_DOWNLOAD_EXECUTION": {
+      "TP": 1,
+      "FP": 0,
+      "TN": 21,
+      "FN": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0
+    }
+  },
+  "unexpected_detections": [],
+  "limitations": [
+    "Synthetic command cases only.",
+    "This is not a real-world precision or recall estimate.",
+    "Only static command rules are evaluated.",
+    "Behavioural rules, IOC matching and correlation are excluded.",
+    "Overall metrics are micro-averaged across rule-case pairs."
+  ]
+}

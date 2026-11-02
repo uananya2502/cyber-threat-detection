@@ -1,0 +1,156 @@
+{
+  "title": "Synthetic Behavioural Rule Evaluation",
+  "configuration": {
+    "login_threshold": 5,
+    "scan_port_threshold": 10,
+    "scan_host_threshold": 10,
+    "window_seconds": 300
+  },
+  "summary": {
+    "total_scenarios": 13,
+    "passed": 13,
+    "failed": 0,
+    "pass_percentage": 100.0
+  },
+  "scenarios": [
+    {
+      "scenario": "brute_force_below_threshold",
+      "events": 4,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "brute_force_at_threshold",
+      "events": 5,
+      "expected_rules": [
+        "HONEYPOT_BRUTE_FORCE"
+      ],
+      "actual_rules": [
+        "HONEYPOT_BRUTE_FORCE"
+      ],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "successful_logins",
+      "events": 6,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "port_scan_below_threshold",
+      "events": 9,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "port_scan_at_threshold",
+      "events": 10,
+      "expected_rules": [
+        "NETWORK_PORT_SCAN"
+      ],
+      "actual_rules": [
+        "NETWORK_PORT_SCAN"
+      ],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "host_scan_below_threshold",
+      "events": 9,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "host_scan_at_threshold",
+      "events": 10,
+      "expected_rules": [
+        "NETWORK_HOST_SCAN"
+      ],
+      "actual_rules": [
+        "NETWORK_HOST_SCAN"
+      ],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "repeated_destination_port",
+      "events": 12,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "repeated_destination_host",
+      "events": 9,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "brute_force_outside_window",
+      "events": 5,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "port_scan_outside_window",
+      "events": 5,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "port_scan_priority",
+      "events": 10,
+      "expected_rules": [
+        "NETWORK_PORT_SCAN"
+      ],
+      "actual_rules": [
+        "NETWORK_PORT_SCAN"
+      ],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    },
+    {
+      "scenario": "different_login_sources",
+      "events": 8,
+      "expected_rules": [],
+      "actual_rules": [],
+      "missing_rules": [],
+      "forbidden_rules_found": [],
+      "status": "PASS"
+    }
+  ],
+  "limitations": [
+    "Synthetic scenarios only.",
+    "Scenario pass rate is not precision, recall or F1.",
+    "IOC matching and cross-event correlation are excluded.",
+    "Results do not establish real-world detection accuracy."
+  ]
+}

@@ -25,15 +25,29 @@ SUPPORTED_TYPES = (
 def _canonical(value: str, kind: str) -> str:
     value = value.strip().strip("[](){}<>,;\"'")
 
-    if kind in ("ip", "ipv4", "ipv6", "ip:port"):
-        if kind == "ip:port":
-            if value.startswith("[") and "]:" in value:
-                value = value[1:].split("]:", 1)[0]
-            elif ":" in value:
-                host, _, port = value.rpartition(":")
-                if port.isdigit():
-                    value = host
+    if kind == "ip:port":
+        host = ""
+        port = ""
 
+        # Bracketed IPv6 endpoint: [2001:db8::1]:443
+        if value.startswith("[") and "]:" in value:
+            host, _, port = value[1:].partition("]:")
+        else:
+            # IPv4 endpoint: 192.0.2.1:443
+            host, separator, port = value.rpartition(":")
+            if not separator or not port.isdigit():
+                return value.lower()
+
+        if not port.isdigit() or not (1 <= int(port) <= 65535):
+            return value.lower()
+
+        try:
+            normalized_host = ipaddress.ip_address(host).compressed.lower()
+            return f"{normalized_host}:{int(port)}"
+        except ValueError:
+            return value.lower()
+
+    if kind in ("ip", "ipv4", "ipv6"):
         try:
             return ipaddress.ip_address(value).compressed.lower()
         except ValueError:
@@ -145,7 +159,16 @@ class IOCMatcher:
             port = event.get(port_field)
 
             if ip and port is not None:
-                add(f"{ip}:{port}")
+                try:
+                    parsed_ip = ipaddress.ip_address(str(ip))
+                    endpoint = (
+                        f"[{parsed_ip.compressed}]:{port}"
+                        if parsed_ip.version == 6
+                        else f"{parsed_ip.compressed}:{port}"
+                    )
+                    add(endpoint)
+                except ValueError:
+                    add(f"{ip}:{port}")
 
         # Raw source evidence may contain additional indicators.
         for field in (
@@ -212,8 +235,14 @@ class IOCMatcher:
     def match(self, event: Mapping[str, Any]) -> list[dict[str, Any]]:
         found = []
         seen = set()
+        seen_observed = set()
+        canonical_cache = {}
 
         for observed, _source in self._observed(event):
+            if observed in seen_observed:
+                continue
+            seen_observed.add(observed)
+
             values = [observed]
 
             if observed.lower().startswith(("http://", "https://")):
@@ -233,7 +262,12 @@ class IOCMatcher:
 
             for value in values:
                 for kind in self.indicator_types:
-                    key = _canonical(value, kind)
+                    cache_key = (value, kind)
+
+                    if cache_key not in canonical_cache:
+                        canonical_cache[cache_key] = _canonical(value, kind)
+
+                    key = canonical_cache[cache_key]
 
                     if key not in self.by_value:
                         continue

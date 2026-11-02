@@ -178,6 +178,125 @@ class UCESIOCTests(unittest.TestCase):
         ]
 
         self.assertEqual(len(matching), 1)
+    def test_url_extracts_hostname_for_domain_ioc(self):
+        matches = self.matcher.match({
+            "url": "https://inquisitive8184.workers.dev/payload"
+        })
+
+        self.assertTrue(
+            any(
+                match["ioc"]["indicator"] == "inquisitive8184.workers.dev"
+                and match["ioc"]["indicator_type"] == "domain"
+                for match in matches
+            )
+        )
+
+    def test_ipv6_canonicalization(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "ipv6_iocs.csv"
+
+            csv_path.write_text(
+                "indicator,indicator_type,threatfox_id,confidence\n"
+                '"2001:4860:4860::8888",ip,ipv6-test,90\n',
+                encoding="utf-8",
+            )
+
+            matcher = IOCMatcher(csv_path)
+
+            matches = matcher.match({
+                "source_ip": "2001:4860:4860:0:0:0:0:8888"
+            })
+
+            self.assertTrue(
+                any(
+                    match["ioc"]["threatfox_id"] == "ipv6-test"
+                    for match in matches
+                )
+            )
+
+
+    def test_ip_port_different_ports_do_not_cross_match(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "ip_port_iocs.csv"
+            csv_path.write_text(
+                "indicator,indicator_type,threatfox_id,confidence\n"
+                "81.70.21.163:4444,ip:port,port-4444,100\n"
+                "81.70.21.163:8088,ip:port,port-8088,90\n",
+                encoding="utf-8",
+            )
+            matcher = IOCMatcher(csv_path)
+
+            matches = matcher.match({
+                "destination_ip": "81.70.21.163",
+                "destination_port": 4444,
+            })
+
+            ids = {m["ioc"]["threatfox_id"] for m in matches}
+            self.assertEqual(ids, {"port-4444"})
+
+    def test_ip_port_unknown_port_does_not_match(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "ip_port_iocs.csv"
+            csv_path.write_text(
+                "indicator,indicator_type,threatfox_id,confidence\n"
+                "81.70.21.163:4444,ip:port,port-4444,100\n",
+                encoding="utf-8",
+            )
+            matcher = IOCMatcher(csv_path)
+
+            matches = matcher.match({
+                "destination_ip": "81.70.21.163",
+                "destination_port": 9999,
+            })
+
+            self.assertEqual(matches, [])
+
+    def test_ip_port_ipv6_canonicalization(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "ipv6_port_iocs.csv"
+            csv_path.write_text(
+                "indicator,indicator_type,threatfox_id,confidence\n"
+                "[2001:db8::1]:443,ip:port,ipv6-443,80\n",
+                encoding="utf-8",
+            )
+            matcher = IOCMatcher(csv_path)
+
+            matches = matcher.match({
+                "destination_ip": "2001:db8:0:0:0:0:0:1",
+                "destination_port": 443,
+            })
+
+            ids = {m["ioc"]["threatfox_id"] for m in matches}
+            self.assertEqual(ids, {"ipv6-443"})
+
+    def test_ip_port_same_ip_different_port_is_not_ipv6_collision(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "ip_port_iocs.csv"
+            csv_path.write_text(
+                "indicator,indicator_type,threatfox_id,confidence\n"
+                "[2001:db8::1]:443,ip:port,ipv6-443,80\n"
+                "[2001:db8::1]:8443,ip:port,ipv6-8443,80\n",
+                encoding="utf-8",
+            )
+            matcher = IOCMatcher(csv_path)
+
+            matches = matcher.match({
+                "destination_ip": "2001:db8::1",
+                "destination_port": 443,
+            })
+
+            ids = {m["ioc"]["threatfox_id"] for m in matches}
+            self.assertEqual(ids, {"ipv6-443"})
 
 
 if __name__ == "__main__":

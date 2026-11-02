@@ -1,0 +1,354 @@
+{
+  "evaluation": "IOC matcher quality evaluation",
+  "dataset": "ThreatFox normalized CSV",
+  "methodology": {
+    "positive_test": "Each CSV record is presented to the matcher in a corresponding event field; expected ThreatFox ID and indicator are checked.",
+    "negative_test": "Synthetic .invalid domains are used as negative controls.",
+    "limitation": "Positive checks reuse the same ThreatFox dataset used to build the matcher. Results measure dataset self-consistency, not independent real-world precision, recall, or F1."
+  },
+  "dataset_records": 2625,
+  "unique_canonical_lookup_keys": 2625,
+  "loaded_indicator_types": [
+    "ip:port",
+    "domain",
+    "url",
+    "md5_hash",
+    "sha1_hash",
+    "sha256_hash"
+  ],
+  "positive_self_consistency": {
+    "records_checked": 2625,
+    "expected_records_matched": 2625,
+    "missed_records": 0,
+    "legitimate_url_to_domain_matches": 70,
+    "other_additional_matches_requiring_review": 0,
+    "per_indicator_type": {
+      "domain": {
+        "checked": 2094,
+        "expected_matches": 2094,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      },
+      "ip:port": {
+        "checked": 134,
+        "expected_matches": 134,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      },
+      "md5_hash": {
+        "checked": 8,
+        "expected_matches": 8,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      },
+      "sha1_hash": {
+        "checked": 8,
+        "expected_matches": 8,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      },
+      "sha256_hash": {
+        "checked": 209,
+        "expected_matches": 209,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      },
+      "url": {
+        "checked": 172,
+        "expected_matches": 172,
+        "missed": 0,
+        "match_rate_percent": 100.0
+      }
+    },
+    "missed_examples": [],
+    "legitimate_related_examples": [
+      {
+        "expected_threatfox_id": "1932264",
+        "actual_threatfox_id": "1932262",
+        "observed": {
+          "url": "https://delta-canvas.com/zxc/mdw"
+        },
+        "additional_indicator": "delta-canvas.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1932263",
+        "actual_threatfox_id": "1932262",
+        "observed": {
+          "url": "https://delta-canvas.com/zxc/kito"
+        },
+        "additional_indicator": "delta-canvas.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1932207",
+        "actual_threatfox_id": "1932206",
+        "observed": {
+          "url": "https://gorsegazette.co/profile/router-validator.js"
+        },
+        "additional_indicator": "gorsegazette.co",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931294",
+        "actual_threatfox_id": "1931295",
+        "observed": {
+          "url": "https://vpanel.v-panel.asia/"
+        },
+        "additional_indicator": "vpanel.v-panel.asia",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931306",
+        "actual_threatfox_id": "1931309",
+        "observed": {
+          "url": "https://gt.234-e.com"
+        },
+        "additional_indicator": "gt.234-e.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931316",
+        "actual_threatfox_id": "1930690",
+        "observed": {
+          "url": "https://ioelche.com/"
+        },
+        "additional_indicator": "ioelche.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931308",
+        "actual_threatfox_id": "1931307",
+        "observed": {
+          "url": "https://gt.1jp88.org/"
+        },
+        "additional_indicator": "gt.1jp88.org",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931270",
+        "actual_threatfox_id": "1931271",
+        "observed": {
+          "url": "https://secretopanel2.site/principal/aNuEntity.php"
+        },
+        "additional_indicator": "secretopanel2.site",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931011",
+        "actual_threatfox_id": "1931016",
+        "observed": {
+          "url": "https://getin.v-panel.asia/"
+        },
+        "additional_indicator": "getin.v-panel.asia",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931191",
+        "actual_threatfox_id": "1931148",
+        "observed": {
+          "url": "https://idcool.codes"
+        },
+        "additional_indicator": "idcool.codes",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931159",
+        "actual_threatfox_id": "1932047",
+        "observed": {
+          "url": "https://tajmahalmartigues.com/"
+        },
+        "additional_indicator": "tajmahalmartigues.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931149",
+        "actual_threatfox_id": "1932098",
+        "observed": {
+          "url": "https://triplehelixconferencebrazil.com/"
+        },
+        "additional_indicator": "triplehelixconferencebrazil.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931150",
+        "actual_threatfox_id": "1932071",
+        "observed": {
+          "url": "https://theaffinitysalon.com/"
+        },
+        "additional_indicator": "theaffinitysalon.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931117",
+        "actual_threatfox_id": "1931981",
+        "observed": {
+          "url": "https://sfbayxlencylimo.com/"
+        },
+        "additional_indicator": "sfbayxlencylimo.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931103",
+        "actual_threatfox_id": "1931102",
+        "observed": {
+          "url": "https://sd.234-e.com/"
+        },
+        "additional_indicator": "sd.234-e.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931101",
+        "actual_threatfox_id": "1931100",
+        "observed": {
+          "url": "https://sd.1jp88.org/"
+        },
+        "additional_indicator": "sd.1jp88.org",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931092",
+        "actual_threatfox_id": "1931808",
+        "observed": {
+          "url": "https://mosmed.su/"
+        },
+        "additional_indicator": "mosmed.su",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931094",
+        "actual_threatfox_id": "1931796",
+        "observed": {
+          "url": "https://mkt4.com.br/"
+        },
+        "additional_indicator": "mkt4.com.br",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931078",
+        "actual_threatfox_id": "1931733",
+        "observed": {
+          "url": "https://legacyncc.com/"
+        },
+        "additional_indicator": "legacyncc.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931077",
+        "actual_threatfox_id": "1931723",
+        "observed": {
+          "url": "https://lafriqueenbeaute.com/"
+        },
+        "additional_indicator": "lafriqueenbeaute.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931029",
+        "actual_threatfox_id": "1931604",
+        "observed": {
+          "url": "https://foltambiental.eco.br/"
+        },
+        "additional_indicator": "foltambiental.eco.br",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931012",
+        "actual_threatfox_id": "1930691",
+        "observed": {
+          "url": "https://ioninsurance.com.tr/"
+        },
+        "additional_indicator": "ioninsurance.com.tr",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931013",
+        "actual_threatfox_id": "1931454",
+        "observed": {
+          "url": "https://chrismikasport.com/"
+        },
+        "additional_indicator": "chrismikasport.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1931014",
+        "actual_threatfox_id": "1930689",
+        "observed": {
+          "url": "https://intelligenes.com/"
+        },
+        "additional_indicator": "intelligenes.com",
+        "additional_indicator_type": "domain"
+      },
+      {
+        "expected_threatfox_id": "1930997",
+        "actual_threatfox_id": "1930665",
+        "observed": {
+          "url": "https://icercasa.es/"
+        },
+        "additional_indicator": "icercasa.es",
+        "additional_indicator_type": "domain"
+      }
+    ],
+    "other_additional_examples": []
+  },
+  "negative_controls": {
+    "negative_events": 100,
+    "false_matches": 0,
+    "negative_control_pass": true,
+    "examples": []
+  },
+  "deduplication": {
+    "tested": true,
+    "indicator": "inquisitive8184.workers.dev",
+    "matching_alerts": 1,
+    "passed": true
+  },
+  "severity_validation": {
+    "checks": 7,
+    "passed": 7,
+    "failed": 0,
+    "details": [
+      {
+        "confidence": 50,
+        "expected_severity": "medium",
+        "actual_severity": "medium",
+        "passed": true
+      },
+      {
+        "confidence": 75,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      },
+      {
+        "confidence": 100,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      },
+      {
+        "confidence": 90,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      },
+      {
+        "confidence": 80,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      },
+      {
+        "confidence": 95,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      },
+      {
+        "confidence": 85,
+        "expected_severity": "high",
+        "actual_severity": "high",
+        "passed": true
+      }
+    ]
+  }
+}

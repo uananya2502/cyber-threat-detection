@@ -1,205 +1,440 @@
 # Cyber Threat Detection System
 
-A multi-source cybersecurity threat detection and correlation system
-designed to collect security events, normalize them, detect known
-attack patterns, correlate related events, and generate validated alerts.
+A real-time, multi-source cybersecurity threat detection and correlation system designed to collect, normalize, analyze, and correlate security events from different sources. The system combines rule-based detection, threat intelligence matching, behavioural analysis, and alert validation to identify potentially malicious activities.
 
-## Project Scope
+## Project Overview
 
-The system is designed around multiple security data sources such as:
+Modern cyberattacks often involve activities distributed across multiple systems and data sources. Detecting these threats requires more than analyzing individual security events.
 
-- Endpoint logs
-- Network logs
-- Honeypot logs
-- Threat intelligence
+This project aims to build a unified threat detection system that processes security events from multiple sources, identifies suspicious patterns, correlates related activities, and generates structured security alerts.
 
-The collected events will be normalized into a unified event structure
-and processed through rule-based detection, machine-learning-based
-scoring, cross-source correlation, and alert validation.
+### Key Objectives
 
-## My Responsibility
+- Collect security events from multiple sources.
+- Normalize events into a common structure.
+- Detect known attack patterns using rule-based detection.
+- Identify malicious indicators using threat intelligence.
+- Detect suspicious behaviour through behavioural rules.
+- Correlate related events across sources and sessions.
+- Validate, prioritize, and filter generated alerts.
+- Evaluate detection quality, latency, throughput, and scalability.
 
-Ananya - Rules, Correlation & Performance
+## Project Architecture
 
-My main responsibilities are:
+The proposed system follows this processing architecture:
 
-- Known-attack rule detection
-- Threat-intelligence / IOC matching
-- Cross-source event correlation
-- Alert validation and filtering
-- Rule and correlation tuning
-- Load and latency testing
-- Performance analysis
+```text
+       Security Data Sources
+    (Honeypot, Network, Endpoint)
+                |
+                v
+        Data Collection
+                |
+                v
+       Event Normalization
+                |
+                v
+       Streaming Processing
+          (Kafka / Spark)
+                |
+        +-------+-------+
+        |               |
+        v               v
+    Rule Engine     ML Scoring
+        |               |
+        +-------+-------+
+                |
+                v
+       Cross-Source Correlation
+                |
+                v
+        Threat / Alert Fusion
+                |
+                v
+       Alert Validation
+                |
+                v
+       Storage / Dashboard
+```
 
-## Current Implementation
+*Note: The architecture represents the overall project design. Kafka/Spark streaming and ML integration are separate team components and are still under development. The local Python detection pipeline is implemented and can operate independently.*
 
-### 1. Honeypot Environment
+## My Contribution
 
-- Ubuntu environment configured using UTM
-- Cowrie SSH honeypot installed
-- SSH honeypot running on port 2222
-- Controlled local SSH testing completed
+**Ananya – Rules, Correlation & Performance**
 
-### 2. Honeypot Event Collection
+My responsibility is to develop and evaluate the rule-based detection, threat intelligence matching, event correlation, alert validation, and performance evaluation components.
 
-Cowrie is generating structured JSON security events.
+### 1. Known-Attack Detection Rules
 
-Example event information includes:
+Implemented a Python-based detection engine to identify suspicious activities using predefined rules and behavioural patterns.
+
+Detection capabilities include:
+
+- System reconnaissance
+- User and account enumeration
+- Directory and file reconnaissance
+- Suspicious download activity
+- Network reconnaissance
+- Brute-force login detection
+- Port-scan detection
+- Host-scan detection
+- Suspicious process and network activity
+
+The rule engine supports pattern-based matching, behavioural thresholds, time-window analysis, and alert severity assignment.
+
+### 2. Threat Intelligence and IOC Matching
+
+Integrated ThreatFox threat intelligence into the local detection pipeline.
+
+The IOC matcher uses the normalized ThreatFox CSV feed and supports:
+
+- IP addresses
+- IP:Port combinations
+- Domains and hostnames
+- URLs
+- MD5 hashes
+- SHA1 hashes
+- SHA256 hashes
+
+The matcher extracts indicators from observed security events, performs canonicalization, and enriches matches with available threat intelligence context, including confidence, malware information, and associated tags.
+
+Additional improvements include IP:Port canonicalization, IPv6 handling, indicator deduplication, and severity assignment based on threat confidence.
+
+### 3. Cross-Source Event Correlation
+
+Implemented event correlation to identify related security activities occurring within configurable time windows.
+
+The correlation engine:
+
+- Groups events using source IP addresses or session identifiers.
+- Uses timestamps to identify related activity.
+- Handles out-of-order events.
+- Separates unrelated sources and activity bursts.
+- Generates correlation alerts when multiple event types are associated with the same activity.
+
+This helps identify suspicious behaviour that may not be obvious when individual events are analyzed independently.
+
+### 4. Alert Validation and Filtering
+
+Implemented an alert validation component to ensure generated alerts follow a consistent structure.
+
+Key capabilities include:
+
+- Required-field validation.
+- Severity normalization.
+- Alert metadata enrichment.
+- Deterministic alert ID generation.
+- Duplicate alert filtering.
+
+The pipeline produces structured JSON Lines alert output.
+
+### 5. Performance Evaluation
+
+Developed benchmarking and evaluation scripts to assess detection performance and processing behaviour.
+
+Evaluation areas include:
+
+- Event-processing throughput.
+- Processing latency.
+- Memory consumption.
+- IOC matching performance.
+- Detection rule coverage.
+- Behavioural rule validation.
+- Performance bottleneck analysis.
+
+The project includes dedicated scripts for benchmarking IOC matching, evaluating detection quality, and validating behavioural rules.
+
+## Honeypot Environment
+
+The project uses Cowrie as an SSH honeypot to collect real security events.
+
+Environment configuration:
+
+- Ubuntu Linux running in UTM.
+- Cowrie SSH honeypot installed and configured.
+- SSH honeypot operating on port `2222`.
+- Controlled SSH testing performed.
+- Structured JSON event logging enabled.
+
+Cowrie generates events containing information such as:
 
 - Session ID
-- Source IP
-- Source port
-- Destination IP
-- Destination port
-- Protocol
+- Source and destination IP addresses
+- Source and destination ports
+- Event type and timestamp
 - Command input
-- Event ID
-- Timestamp
+- Authentication activity
 - Sensor information
 
-### 3. Initial Rule Engine
+These events provide input for the local detection and correlation pipeline.
 
-Implemented a Python-based rule engine that reads real Cowrie
-JSON events and detects command-based reconnaissance activity.
+## Local Detection Pipeline
 
-Current rules include:
+The repository includes a Python-based detection pipeline under `detection/`.
 
-- SYSTEM_RECON
-- USER_RECON
-- DIRECTORY_RECON
-- FILE_RECON
-- ACCOUNT_ENUMERATION
-- DOWNLOAD_ACTIVITY
-- NETWORK_RECON
+| Component | Responsibility |
+|---|---|
+| `normalize.py` | Normalizes incoming security events |
+| `rules.py` | Applies static and behavioural detection rules |
+| `ioc.py` | Matches observed indicators against ThreatFox |
+| `correlate.py` | Correlates related security events |
+| `alerts.py` | Validates and enriches generated alerts |
+| `pipeline.py` | Connects detection, IOC matching, and correlation |
+| `cli.py` | Provides command-line execution |
 
-The rule engine supports pattern-based matching using regular expressions.
+### Processing Workflow
 
-### 4. Threat Intelligence
+```text
+Cowrie / JSONL Events
+         |
+         v
+   Event Normalization
+         |
+         v
+    Rule Evaluation
+         |
+         v
+     IOC Matching
+         |
+         v
+  Behavioural Detection
+         |
+         v
+  Event Correlation
+         |
+         v
+   Alert Validation
+         |
+         v
+   JSONL Alert Output
+```
 
-- ThreatFox collection and normalization scripts are present.
-- `data/threat_intel/threatfox_normalized.csv` contains the normalized feed snapshot.
-- The local detection pipeline matches IPs, domains, URLs, and file hashes and enriches matches with feed context.
+The local pipeline can process JSONL event files without requiring an active Kafka broker.
 
-## Current Pipeline
+## Getting Started
 
-Cowrie Honeypot
-        |
-        v
-   cowrie.json
-        |
-        v
-   JSON Parser
-        |
-        v
-    Rule Engine
-        |
-        v
-   Security Alert
-        |
-        v
-IOC Matching + Correlation
-        |
-        v
-Alert Validation / Filtering
-        |
-        v
-Final Alert
+### Requirements
 
-## Project Status
+- Python 3.10 or later
+- Git
+- Ubuntu or another compatible Linux environment
+- Cowrie for honeypot event collection
 
-### Completed
+The local detection pipeline uses Python's standard library.
 
-- [x] Ubuntu honeypot environment
-- [x] Cowrie installation and configuration
-- [x] Controlled SSH test
-- [x] Cowrie JSON event collection
-- [x] Initial rule engine
-- [x] Pattern-based command detection
-- [x] Initial IOC data structure
+### Clone the Repository
 
-### In Progress
+```bash
+git clone https://github.com/uananya2502/cyber-threat-detection.git
 
-- [ ] Additional controlled attack cases
-- [ ] Honeypot/network mapping and validation
-- [x] IOC matching engine against the normalized ThreatFox CSV
-- [x] Common event field mapping (team-specific UCES schema still needs confirmation)
-- [x] Basic source-IP/session time-window correlation
-- [x] Alert validation, severity assignment, and deduplication
-- [ ] Rule/correlation tuning
-- [ ] Load and latency testing
-- [ ] Performance analysis
+cd cyber-threat-detection
+```
 
-## Planned Architecture
-
-Security Sources
-      |
-      v
-Data Collection
-      |
-      v
-UCES Normalization
-      |
-      v
-Streaming / Processing
-      |
-      +------------------+
-      |                  |
-      v                  v
- Rule Engine       ML Threat Scoring
-      |                  |
-      +--------+---------+
-               |
-               v
-        Cross-Source Correlation
-               |
-               v
-        Threat / Alert Fusion
-               |
-               v
-       Alert Validation
-               |
-               v
-       Storage / Dashboard
-
-## Development Environment
-
-- Ubuntu Linux
-- Python
-- Cowrie
-- Git / GitHub
-
-## Next Milestone
-
-Run the pipeline against Cowrie JSONL from the Ubuntu VM and tune rules/correlation with the team. Cross-source behavior can be validated when sample events and the team's UCES schema are available. Kafka remains disabled in the sample configuration until broker connectivity is confirmed.
-
-## Local rule and IOC pipeline
-
-The repository now includes a local, dependency-free Python pipeline in `detection/`:
-
-1. `normalize.py` maps Cowrie and common event field names to a compact shared event format and retains the source record under `raw`.
-2. `rules.py` applies configurable regular-expression rules to command input.
-3. `ioc.py` reads the existing `data/threat_intel/threatfox_normalized.csv` using its actual `indicator` and `indicator_type` columns, and attaches ThreatFox context (confidence, malware, tags, and dates) to matches.
-4. `correlate.py` groups events by source IP (or session when the IP is absent) in a configurable time window.
-5. `alerts.py` validates required alert fields, normalizes severity, and assigns a deterministic ID for deduplication.
-6. `pipeline.py` and `cli.py` connect these stages for local JSONL input. Kafka is represented in the sample config but disabled; no broker connectivity is assumed.
-
-### Run locally
-
-Use Python 3.10+ (the implementation uses only the standard library). From the repository root:
+### Run the Test Suite
 
 ```bash
 python3 -m unittest discover -s tests -v
+```
+
+### Run the Detection Pipeline
+
+For synthetic test events:
+
+```bash
 python3 -m detection.cli tests/fixtures/synthetic_events.jsonl --output work/alerts.jsonl
 ```
 
-For the real Cowrie JSONL file in the Ubuntu VM:
+For Cowrie JSON events:
 
 ```bash
 python3 -m detection.cli cowrie/var/log/cowrie/cowrie.json --output work/cowrie-alerts.jsonl
 ```
 
-The sample config is `config/detection.json`. Edit rule patterns, severities, IOC CSV path, and correlation window/count there. Input lines must each be a JSON object; malformed JSON produces a line-numbered error. Alert output is JSON Lines. The included fixture uses synthetic source activity and one indicator present in the existing ThreatFox CSV.
+Generated alerts are written in JSON Lines format.
 
-### Safe handling and limits
+### Configuration
 
-Do not copy `.env`, API keys, raw Cowrie logs, or credentials into a shared archive or commit them. The ThreatFox CSV is a dated feed snapshot; refresh it using the existing collection and normalization scripts when network access and credentials are available. The checked-in IOC examples in `threat_intel/iocs.json` are not used by the matcher. The current normalizer covers common Cowrie and ECS-like field names; if the team's UCES schema is available, add explicit mappings in `detection/normalize.py` and verify against its schema. Correlation is intentionally simple and groups by source IP/session; tune its threshold for the team's event volume before operational use.
+The sample configuration is available at:
+
+```text
+config/detection.json
+```
+
+It contains configurable detection rules, severity settings, IOC feed paths, and correlation parameters.
+
+Input files should contain one JSON object per line. Malformed JSON lines are reported with their corresponding line numbers.
+
+## Testing and Evaluation
+
+The detection components have been tested using unit tests, synthetic attack scenarios, IOC datasets, and controlled Cowrie events.
+
+### Regression Testing
+
+**83 automated tests passed**, covering:
+
+- Detection and event normalization.
+- IOC matching.
+- IP:Port and IPv6 canonicalization.
+- Behavioural detection rules.
+- Cross-source correlation.
+- Alert validation and deduplication.
+- False-positive controls.
+- Pipeline execution.
+
+### IOC Quality Evaluation
+
+The ThreatFox dataset evaluation produced the following results:
+
+| Metric | Result |
+|---|---:|
+| ThreatFox records checked | 2,625 |
+| Expected records matched | 2,625 |
+| Missed records | 0 |
+| Expected-match coverage | 100% |
+| Negative controls without false matches | 100 / 100 |
+| Deduplication checks | Passed |
+| Severity checks | 7 / 7 passed |
+
+The 70 additional URL-to-domain matches were classified as related indicator matches.
+
+*These results represent dataset self-consistency and controlled negative-test performance. They should not be interpreted as real-world precision, recall, or production detection accuracy.*
+
+### Performance Benchmarking
+
+Performance evaluation scripts are available under:
+
+```text
+scripts/
+```
+
+Relevant scripts include:
+
+- `benchmark_detection.py`
+- `benchmark_latency.py`
+- `benchmark_ioc.py`
+- `benchmark_ioc_diverse.py`
+- `evaluate_detection_quality.py`
+- `evaluate_behavioural_rules.py`
+- `evaluate_ioc_quality.py`
+
+Evaluation reports are stored under:
+
+```text
+results/performance/
+```
+
+These benchmarks measure the local detection implementation. Production streaming performance will require separate evaluation after Kafka/Spark integration.
+
+## Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Programming Language | Python |
+| Operating System | Ubuntu Linux |
+| Honeypot | Cowrie |
+| Threat Intelligence | ThreatFox |
+| Event Format | JSON / JSONL |
+| Detection | Rule-based and behavioural analysis |
+| Data Processing | Local Python pipeline |
+| Streaming Architecture | Apache Kafka / Apache Spark (team integration in progress) |
+| Version Control | Git / GitHub |
+
+## Project Status
+
+### Completed
+
+- Ubuntu honeypot environment setup.
+- Cowrie installation and configuration.
+- Controlled SSH testing and event collection.
+- Rule-based attack detection.
+- Behavioural detection rules.
+- ThreatFox IOC matching.
+- Cross-source event correlation logic.
+- Alert validation and deduplication.
+- Detection quality evaluation.
+- Performance benchmarking and analysis.
+- Automated regression testing.
+- Local detection pipeline implementation.
+
+### Team-Level Work in Progress
+
+- Kafka/Spark streaming integration.
+- Machine-learning-based anomaly scoring.
+- Integration of all detection modules.
+- Unified dashboard and end-to-end system validation.
+
+## Repository Structure
+
+```text
+cyber-threat-detection/
+│
+├── config/
+│   └── detection.json
+│
+├── data/
+│   └── threat_intel/
+│       └── threatfox_normalized.csv
+│
+├── detection/
+│   ├── normalize.py
+│   ├── rules.py
+│   ├── ioc.py
+│   ├── correlate.py
+│   ├── alerts.py
+│   ├── pipeline.py
+│   └── cli.py
+│
+├── scripts/
+│   ├── benchmark_detection.py
+│   ├── benchmark_latency.py
+│   ├── benchmark_ioc.py
+│   ├── benchmark_ioc_diverse.py
+│   ├── evaluate_detection_quality.py
+│   ├── evaluate_behavioural_rules.py
+│   └── evaluate_ioc_quality.py
+│
+├── tests/
+│   ├── test_detection.py
+│   ├── test_ioc_uces.py
+│   ├── test_correlation.py
+│   ├── test_rules.py
+│   └── ...
+│
+└── results/
+    └── performance/
+        ├── behavioural_quality_report.json
+        ├── detection_quality_report.json
+        ├── ioc_quality_report.json
+        ├── latency_baseline_2026-10-31.csv
+        └── latency_report.md
+```
+
+*The structure above highlights the main project components; additional repository files and test modules are present.*
+
+## Security and Data Handling
+
+- Do not commit API keys, credentials, or `.env` files.
+- Avoid sharing raw honeypot logs containing potentially sensitive information.
+- ThreatFox data represents a feed snapshot and should be refreshed when required.
+- Detection thresholds should be tuned using representative traffic before operational deployment.
+- IOC matches and correlation alerts provide security evidence, but do not independently confirm that an attack was successful.
+
+## Future Enhancements
+
+- Integrate Kafka and Spark for real-time event processing.
+- Integrate ML-based anomaly scoring.
+- Expand cross-source correlation using additional event types.
+- Improve alert prioritization and threat fusion.
+- Evaluate the complete system under higher event loads.
+- Develop a unified security monitoring dashboard.
+
+## Repository
+
+**GitHub:** https://github.com/uananya2502/cyber-threat-detection.git
+
+---
+
+**Project:** Real-Time Big Data Analytics for Multi-Source Cyber Threat Detection
+
+**Individual Contribution:** Rules, Correlation & Performance — Ananya
